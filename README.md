@@ -1,11 +1,13 @@
 <div align="center">
   <img src="assets/hero-banner.svg" alt="MCP LLM Pricing Intelligence" width="100%" />
   <br/><br/>
-  ![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)
-  ![MCP](https://img.shields.io/badge/Protocol-Model%20Context%20Protocol%20(FastMCP)-7C3AED?style=flat-square)
-  ![Claude 4.5](https://img.shields.io/badge/Client-Claude%20Sonnet%204.5-2563EB?style=flat-square)
-  ![SQLite](https://img.shields.io/badge/Storage-MCP%20SQLite%20%2B%20Firecrawl%20v2-0D9488?style=flat-square)
-  ![License](https://img.shields.io/badge/License-MIT-slate?style=flat-square)
+  <p>
+    <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&amp;logo=python&amp;logoColor=white" alt="Python" />
+    <img src="https://img.shields.io/badge/Protocol-Model%20Context%20Protocol%20%28FastMCP%29-7C3AED?style=flat-square" alt="MCP" />
+    <img src="https://img.shields.io/badge/Client-Claude%20Sonnet%204.5-2563EB?style=flat-square" alt="Claude 4.5" />
+    <img src="https://img.shields.io/badge/Storage-MCP%20SQLite%20%2B%20Firecrawl%20v2-0D9488?style=flat-square" alt="SQLite" />
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-475569?style=flat-square" alt="License" /></a>
+  </p>
 </div>
 
 ---
