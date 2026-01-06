@@ -1,36 +1,81 @@
 # MCP LLM Inference Pricing Intelligence Agent
 
-Autonomous LLM inference market-intelligence agent built on the **Model Context Protocol (MCP)** and **Claude Sonnet 4.5**—coordinating three concurrent `stdio` JSON-RPC MCP servers (**custom FastMCP Firecrawl scraper**, **SQLite persistence server**, and **Filesystem MCP server**) to crawl, normalize, persist, and compare real-time per-million-token pricing across cloud inference providers.
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)
+![MCP](https://img.shields.io/badge/Protocol-Model%20Context%20Protocol%20(FastMCP)-7C3AED?style=flat-square)
+![Claude 4.5](https://img.shields.io/badge/Client-Claude%20Sonnet%204.5-2563EB?style=flat-square)
+![SQLite](https://img.shields.io/badge/Storage-MCP%20SQLite%20%2B%20Firecrawl%20v2-0D9488?style=flat-square)
+![License](https://img.shields.io/badge/License-MIT-slate?style=flat-square)
+
+Autonomous LLM inference pricing analyst built on the **Model Context Protocol (MCP)**—orchestrating three concurrent `stdio` JSON-RPC MCP servers (**custom FastMCP Firecrawl v2 scraper**, **SQLite persistence server**, and **Filesystem MCP server**) under a **Claude Sonnet 4.5** tool-calling client.
+
+![MCP Cross-Provider Pricing](docs/images/mcp_cross_provider_pricing.png)
 
 ---
 
-## Multi-Server MCP Topology
+## 1. Multi-Server MCP Architecture
 
 ```mermaid
 flowchart LR
     C["mcp_client.py<br/>(Claude Sonnet 4.5 + DataExtractor)"] <-->|"stdio JSON-RPC"| S1["mcp_server.py (FastMCP)<br/>scrape_websites + extract_scraped_info"]
-    C <-->|"stdio JSON-RPC"| S2["mcp-server-sqlite<br/>pricing_plans SQLite Table"]
-    C <-->|"stdio JSON-RPC"| S3["server-filesystem<br/>Cached Markdown Snapshots"]
-    S1 --> F["Firecrawl v2 API<br/>(CloudRift, DeepInfra, Fireworks, Groq)"]
+    C <-->|"stdio JSON-RPC"| S2["mcp-server-sqlite<br/>test.db (pricing_plans)"]
+    C <-->|"stdio JSON-RPC"| S3["server-filesystem<br/>scraped_content/"]
+    S1 --> FC["Firecrawl v2 API<br/>(CloudRift, DeepInfra, Fireworks, Groq)"]
 ```
 
 ---
 
-## Key Capabilities & Verified Execution Artifacts
+## 2. Live Execution Transcript Excerpt ([`docs/live_run_transcript.md`](docs/live_run_transcript.md))
 
-- **Custom FastMCP Scraping Server (`mcp_server.py`)**: Exposes `scrape_websites` (live Firecrawl v2 Markdown/HTML extraction + metadata registry `scraped_metadata.json`) and `extract_scraped_info` for targeted provider lookup.
-- **Automated Relational Normalization (`mcp_client.py` `DataExtractor` + `test.db`)**: Parses unstructured multi-provider pricing answers into structured SQLite rows (`provider_name`, `model_name`, `input_price`, `output_price`, `cached_input_price`, `context_window`) queryable interactively via `show data`.
-- **Verified Live Provider Corpus & Run Transcript**: Cached real scrapes across **CloudRift**, **DeepInfra**, **Fireworks AI**, and **Groq** in [`scraped_content/`](scraped_content/) and full multi-turn tool-call execution trace in [`docs/live_run_transcript.md`](docs/live_run_transcript.md) (comparing DeepSeek V3/V4 & Qwen series input/output token economics).
+```markdown
+# PriceScout — Evidence of Working Project
+
+This is a text transcript captured directly from a live run of `mcp_client.py`
+(via `script`, so it is a verbatim terminal capture), sanitized to
+remove the local machine's absolute file path. It demonstrates the three required
+test prompts from the project README/instructions, run back-to-back in one session.
+
+
+## Test 1 — Scraping
+
+Command run:
+```
+scrape these sites: {'cloudrift': 'https://www.cloudrift.ai/inference', 'deepinfra': 'https://deepinfra.com/pricing', 'fireworks': 'https://fireworks.ai/pricing#serverless-pricing', 'groq': 'https://groq.com/pricing'}
+```
+
+```
+Query: scrape these sites: {'cloudrift': 'https://www.cloudrift.ai/inference', 'deepinfra': 'https://deepinfra.com/pricing', 'fireworks': 'https://fireworks.ai/pricing#serverless-pricing', 'groq': 'https://groq.com/pricing'}
+I'll scrape these websites for you to gather their pricing and inference information.
+Calling tool scrape_websites with args {'websites': {'cloudrift': 'https://www.cloudrift.ai/inference', 'deepinfra': 'https://deepinfra.com/pricing', 'fireworks': 'https://fireworks.ai/pricing#serverless-pricing', 'groq': 'https://groq.com/pricing'}}
+Scraping cloudrift: https://www.cloudrift.ai/inference
+Scraping deepinfra: https://deepinfra.com/pricing
+Scraping fireworks: https://fireworks.ai/pricing#serverless-pricing
+Scraping groq: https://groq.com/pricing
+Successfully scraped 4 out of 4 websites
+
+Great! I've successfully scraped all four websites:
+ V
+1. **cloudrift** - https://www.cloudrift.ai/inference
+2. **deepinfra** - https://deepinfra.com/pricing
+3. **fireworks** - https://fireworks.ai/pricing#serverless-pricing
+4. **groq** - https://groq.com/pricing
+
+All the content has been stored and is now available for extraction and analysis.
+```
+
+## Test 2 — Asking Questions & Comparing
+
+Command run:
+```
+How much does cloudrift ai (https://www.cloudrift.ai/inference) charge for deepseek v3?
+```
 
 ---
 
-## Quick Start
+## 3. Quick Start
 
 ```bash
-cp .env.example .env   # Configure ANTHROPIC_API_KEY and FIRECRAWL_API_KEY
+cp .env.example .env   # Configure ANTHROPIC_API_KEY & FIRECRAWL_API_KEY
 uv sync
-
-# Launch the interactive multi-server MCP pricing analyst
 uv run mcp_client.py
 ```
 
