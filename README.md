@@ -12,6 +12,8 @@
 
 ---
 
+![MCP Cross-Provider LLM Pricing Intelligence Architecture](docs/images/architecture_blueprint.png)
+
 Autonomous LLM inference pricing analyst built on the **Model Context Protocol (MCP)**—orchestrating three concurrent `stdio` JSON-RPC MCP servers (**custom FastMCP Firecrawl v2 scraper**, **SQLite persistence server**, and **Filesystem MCP server**) under a **Claude Sonnet 4.5** tool-calling client.
 
 ![MCP Cross-Provider Pricing](docs/images/mcp_cross_provider_pricing.png)
